@@ -68,11 +68,7 @@ func main() {
 func GetChanges(filebytes []byte) []string {
 	changes := []string{}
 	split := strings.Split(string(filebytes), "\n") // split the document into newlines
-	numberReComp, err := regexp.Compile(numberRe)
-	if err != nil {
-		log.Panicln("Unable to compile number regex")
-		return nil
-	}
+	numberReComp := regexp.MustCompile(numberRe)
 	for _, s := range split {
 		b := numberReComp.MatchString(s) // ensures that it isn't the AIRAC title
 		if b {
@@ -84,21 +80,14 @@ func GetChanges(filebytes []byte) []string {
 }
 
 func (changelog *Changelog) ChangesSorter() ([]string, []string) {
-	airacReComp, err := regexp.Compile(airacRe)
-	if err != nil {
-		log.Panicln("Unable to compile AIRAC regex")
-		return nil, nil
-	}
-	contribEndReComp, err := regexp.Compile(contribEndRe)
-	if err != nil {
-		log.Panicln("Unable to compile contributor ending regex")
-		return nil, nil
-	}
+	airacReComp := regexp.MustCompile(airacRe)
+	contribEndReComp := regexp.MustCompile(contribEndRe)
 	airacList := []string{}
 	otherList := []string{}
 	for _, s := range changelog.Changes {
 		contribLoc := contribEndReComp.FindStringIndex(s) // find the location of where the "thanks to" part begins
 		if len(contribLoc) == 0 {
+			contribLoc = []int{0}
 			contribLoc[0] = len(s) // if there is no "thanks to" part then just keep the whole message
 		}
 		contribLocBeg := contribLoc[0]
@@ -114,16 +103,8 @@ func (changelog *Changelog) ChangesSorter() ([]string, []string) {
 
 func (changelog *Changelog) AIRACMapGen() (map[string][]string, []int) {
 	airacmap := map[string][]string{}
-	airacNumReComp, err := regexp.Compile(airacNumRe)
-	if err != nil {
-		log.Panicln("Unable to compile AIRAC number regex")
-		return nil, nil
-	}
-	airacMessageReComp, err := regexp.Compile(airacMessageRe)
-	if err != nil {
-		log.Panicln("Unable to compile message regex")
-		return nil, nil
-	}
+	airacNumReComp := regexp.MustCompile(airacNumRe)
+	airacMessageReComp := regexp.MustCompile(airacMessageRe)
 	for _, s := range changelog.AIRACList {
 		num := airacNumReComp.FindString(s)
 		message := airacMessageReComp.FindStringSubmatch(s)
@@ -149,11 +130,7 @@ func (changelog *Changelog) AIRACMapGen() (map[string][]string, []int) {
 }
 
 func (changelog *Changelog) ContribGen() []string {
-	contribNameReComp, err := regexp.Compile(contribNameRe)
-	if err != nil {
-		log.Panicln("Unable to compile contributor name regex")
-		return nil
-	}
+	contribNameReComp := regexp.MustCompile(contribNameRe)
 	contribmap := map[string]bool{}
 	contriblist := []string{}
 	for _, y := range changelog.Changes {
