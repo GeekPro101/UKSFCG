@@ -32,6 +32,8 @@ Larry Benwater
 ```
 
 ## Usage
+The easiest way to use this is copy and paste the desired changelog list from [https://raw.githubusercontent.com/VATSIM-UK/UK-Sector-File/main/.github/CHANGELOG.md](https://raw.githubusercontent.com/VATSIM-UK/UK-Sector-File/main/.github/CHANGELOG.md) into a `changelog.md` file locally, and just run with `./UKSFCG`
+
 Flags:
 - `--in` - sets the input file, optional, default `changelog.md`
 - `--out` - sets the output file, optional, default `output.txt`
