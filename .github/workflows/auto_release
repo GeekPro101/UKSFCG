@@ -1,0 +1,28 @@
+name: tagged-release
+'on':
+  push:
+    tags:
+      - v*
+jobs:
+  tagged-release:
+    name: Tagged Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+      - name: Test
+        run: go test -v ./...
+      - name: Build Windows
+        run: GOOS=windows GOARCH=amd64 go build -o UKSFCG-win-x64.exe
+      - name: Build Linux
+        run: GOOS=linux GOARCH=amd64 go build -o UKSFCG-linux-x64
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: '${{ secrets.GITHUB_TOKEN }}'
+          prerelease: false
+          files: |
+            UKSFCG-win-x64.exe
+            UKSFCG-linux-x64
