@@ -6,6 +6,7 @@ name: tagged-release
   workflow_dispatch:
 jobs:
   tagged-release:
+    permissions: write-all
     name: Tagged Release
     runs-on: ubuntu-latest
     steps:
