@@ -3,6 +3,7 @@ name: tagged-release
   push:
     tags:
       - v*
+  workflow_dispatch:
 jobs:
   tagged-release:
     name: Tagged Release
@@ -19,7 +20,8 @@ jobs:
         run: GOOS=windows GOARCH=amd64 go build -o UKSFCG-win-x64.exe
       - name: Build Linux
         run: GOOS=linux GOARCH=amd64 go build -o UKSFCG-linux-x64
-      - uses: marvinpinto/action-automatic-releases@latest
+      - name: Release
+        uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: '${{ secrets.GITHUB_TOKEN }}'
           prerelease: false
