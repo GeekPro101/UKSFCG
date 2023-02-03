@@ -48,26 +48,36 @@ func main() {
 			os.Exit(1)
 		}
 	}()
-	// Get input + output  from flags
-	inputfile := flag.String("in", defaultInputFile, "Set the input file")
-	outputfile := flag.String("out", defaultOutputFile, "Set the output file")
-	flag.Parse()
-	// Open + read file
-	fmt.Println("Reading from: " + *inputfile)
-	filebytes, err := os.ReadFile(*inputfile)
+	_, err := flags.Parse(&opts)
 	if err != nil {
-		log.Panicln("Unable to read from " + *inputfile)
+		if strings.Contains(err.Error(), "help") {
+			os.Exit(0)
+		}
+		log.Panicln("Error while parsing args")
+	}
+	var filebytes []byte
+	if opts.Url != "" {
+		fmt.Println("Using online file - be aware this may take some time (10s+)")
+		fmt.Println("Reading from: " + opts.Url)
+		filebytes = GetWebChangelog(opts.Url)
+	} else {
+		fmt.Println("Using local file")
+		fmt.Println("Reading from: " + opts.InputFile)
+		filebytes, err = os.ReadFile(opts.InputFile)
+		if err != nil {
+			log.Panicln("Unable to read from " + opts.InputFile)
+		}
 	}
 	changelog := Changelog{}
 	changelog.Changes = GetChanges(filebytes)
 	changelog.AIRACList, changelog.Other = changelog.ChangesSorter()
 	changelog.AIRACMap, changelog.AIRACs = changelog.AIRACMapGen()
 	changelog.Contributors = changelog.ContribGen()
-	file := CreateFile(*outputfile)
+	file := CreateFile(opts.OutputFile)
 	OutputAIRAC(file, changelog)
 	OutputOther(file, changelog)
 	OutputContribs(file, changelog)
-	fmt.Println("Output to: " + *outputfile)
+	fmt.Println("Output to: " + opts.OutputFile)
 	timeElapsed := time.Since(start)
 	fmt.Println("Time taken:", timeElapsed)
 }
