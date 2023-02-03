@@ -16,15 +16,19 @@ import (
 // Due to the Go regex engine not supporting look-forwards and look-behinds, capturing groups have been used instead
 
 const (
-	numberRe          string = `^\d{1,2}\.\s`                                                         // should match "12."
-	airacRe           string = `AIRAC \(\d{4}\)`                                                      // should match "AIRAC (2012)
-	airacNumRe        string = `\d{4}`                                                                // should match 2012
-	airacMessageRe    string = `(?:-\s)([\S\s]*)`                                                     // should match the "- message" part, but only captures the message
-	contribNameRe     string = `(?:\-\sthanks\sto\s\@[A-Za-z0-9-]+\s\()([A-Za-z]+\s?[A-Za-z]*)(?:\))` // matches the thanks to part, but only captures the names
-	contribEndRe      string = `\s-\sthanks\sto\s[^\n]*$`                                             // matches the thanks to part
-	defaultInputFile  string = "changelog.md"
-	defaultOutputFile string = "output.txt"
+	numberRe       string = `^\d{1,2}\.\s`                                                         // should match "12."
+	airacRe        string = `AIRAC \(\d{4}\)`                                                      // should match "AIRAC (2012)
+	airacNumRe     string = `\d{4}`                                                                // should match 2012
+	airacMessageRe string = `(?:-\s)([\S\s]*)`                                                     // should match the "- message" part, but only captures the message
+	contribNameRe  string = `(?:\-\sthanks\sto\s\@[A-Za-z0-9-]+\s\()([A-Za-z]+\s?[A-Za-z]*)(?:\))` // matches the thanks to part, but only captures the names
+	contribEndRe   string = `\s-\sthanks\sto\s[^\n]*$`                                             // matches the thanks to part
 )
+
+var opts struct {
+	InputFile  string `long:"input" description:"Input file name" optional:"yes" default:"changelog.md"`
+	OutputFile string `long:"output" description:"Output file name" optional:"yes" default:"output.txt"`
+	Url        string `long:"url" description:"Set url - specify to use default, or provide value to use that" optional:"yes" optional-value:"https://raw.githubusercontent.com/VATSIM-UK/UK-Sector-File/main/.github/CHANGELOG.md"`
+}
 
 type Changelog struct {
 	Changes      []string
