@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"regexp"
 	"sort"
@@ -68,6 +70,19 @@ func main() {
 	fmt.Println("Output to: " + *outputfile)
 	timeElapsed := time.Since(start)
 	fmt.Println("Time taken:", timeElapsed)
+}
+
+func GetWebChangelog(urls string) []byte {
+	resp, err := http.Get(urls)
+	if err != nil {
+		log.Panicln("Could not retrieve changelog")
+	}
+	defer resp.Body.Close()
+	response, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Panicln("Error reading response body")
+	}
+	return response
 }
 
 func GetChanges(filebytes []byte) []string {
