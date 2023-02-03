@@ -98,9 +98,16 @@ func GetWebChangelog(urls string) []byte {
 func GetChanges(filebytes []byte) []string {
 	changes := []string{}
 	split := strings.Split(string(filebytes), "\n") // split the document into newlines
+	airacnumbers := 0
 	numberReComp := regexp.MustCompile(numberRe)
 	for _, s := range split {
-		b := numberReComp.MatchString(s) // ensures that it isn't the AIRAC title
+		if airacnumbers >= 2 {
+			break // if we go through multiple AIRACs then stop
+		}
+		if strings.Contains(s, "#") {
+			airacnumbers = airacnumbers + 1
+		}
+		b := numberReComp.MatchString(s) // only match changelog entries
 		if b {
 			s = numberReComp.ReplaceAllString(s, "") // removes the number from the start
 			changes = append(changes, s)
