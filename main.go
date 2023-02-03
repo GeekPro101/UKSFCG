@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -10,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/jessevdk/go-flags"
 )
 
 // Due to the Go regex engine not supporting look-forwards and look-behinds, capturing groups have been used instead
