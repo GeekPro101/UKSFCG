@@ -74,9 +74,7 @@ func main() {
 	changelog.AIRACMap, changelog.AIRACs = changelog.AIRACMapGen()
 	changelog.Contributors = changelog.ContribGen()
 	file := CreateFile(opts.OutputFile)
-	OutputAIRAC(file, changelog)
-	OutputOther(file, changelog)
-	OutputContribs(file, changelog)
+	Output(file, changelog)
 	fmt.Println("Output to: " + opts.OutputFile)
 	timeElapsed := time.Since(start)
 	fmt.Println("Time taken:", timeElapsed)
@@ -199,7 +197,6 @@ func OutputAIRAC(f io.Writer, c Changelog) {
 		for _, y := range value {
 			f.Write([]byte(y + "\n"))
 		}
-		f.WriteString("\n")
 	}
 }
 
@@ -208,7 +205,6 @@ func OutputOther(f io.Writer, c Changelog) {
 	for _, value := range c.Other {
 		f.Write([]byte(value + "\n"))
 	}
-	f.WriteString("\n")
 }
 
 func OutputContribs(f io.Writer, c Changelog) {
@@ -216,4 +212,13 @@ func OutputContribs(f io.Writer, c Changelog) {
 	for _, value := range c.Contributors {
 		f.Write([]byte(value + "\n"))
 	}
+}
+
+func Output(f io.Writer, c Changelog) {
+	OutputAIRAC(f, c)
+	f.Write([]byte("\n"))
+	OutputOther(f, c)
+	f.Write([]byte("\n"))
+	OutputContribs(f, c)
+
 }
