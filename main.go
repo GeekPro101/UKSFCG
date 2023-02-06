@@ -191,29 +191,29 @@ func CreateFile(outputFile string) *os.File {
 	return newfile
 }
 
-func OutputAIRAC(f *os.File, c Changelog) {
-	f.WriteString("--- AIRACs: ---" + "\n")
+func OutputAIRAC(f io.Writer, c Changelog) {
+	f.Write([]byte("--- AIRACs: ---" + "\n"))
 	for _, key := range c.AIRACs {
 		value := c.AIRACMap[fmt.Sprint(key)]
-		f.WriteString(fmt.Sprint(key) + ":\n")
+		f.Write([]byte(fmt.Sprint(key) + ":\n"))
 		for _, y := range value {
-			f.WriteString(y + "\n")
+			f.Write([]byte(y + "\n"))
 		}
 		f.WriteString("\n")
 	}
 }
 
-func OutputOther(f *os.File, c Changelog) {
-	f.WriteString("--- Other: ---" + "\n")
+func OutputOther(f io.Writer, c Changelog) {
+	f.Write([]byte("--- Other: ---" + "\n"))
 	for _, value := range c.Other {
-		f.WriteString(value + "\n")
+		f.Write([]byte(value + "\n"))
 	}
 	f.WriteString("\n")
 }
 
 func OutputContribs(f io.Writer, c Changelog) {
-	f.Write([]byte("--- Contributors: ---" + "\n")
+	f.Write([]byte("--- Contributors: ---" + "\n"))
 	for _, value := range c.Contributors {
-		f.Write([]byte(value + "\n")
+		f.Write([]byte(value + "\n"))
 	}
 }
