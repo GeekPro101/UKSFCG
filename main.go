@@ -211,9 +211,9 @@ func OutputOther(f *os.File, c Changelog) {
 	f.WriteString("\n")
 }
 
-func OutputContribs(f *os.File, c Changelog) {
-	f.WriteString("--- Contributors: ---" + "\n")
+func OutputContribs(f io.Writer, c Changelog) {
+	f.Write([]byte("--- Contributors: ---" + "\n")
 	for _, value := range c.Contributors {
-		f.WriteString(value + "\n")
+		f.Write([]byte(value + "\n")
 	}
 }
