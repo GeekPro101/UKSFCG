@@ -220,5 +220,4 @@ func Output(f io.Writer, c Changelog) {
 	OutputOther(f, c)
 	f.Write([]byte("\n"))
 	OutputContribs(f, c)
-
 }
