@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -79,4 +80,57 @@ func TestContribGen(t *testing.T) {
 		"Doe John",
 	}
 	assert.ElementsMatch(t, intendedContribs, contribs)
+}
+
+func TestAIRACOutput(t *testing.T) {
+	c := Changelog{
+		AIRACs: []int{2207, 2206},
+		AIRACMap: map[string][]string{
+			"2207": {"Test 1", "Test 2"},
+			"2206": {"Test 3", "Test 4", "Test 5"},
+		},
+	}
+	buf := bytes.Buffer{}
+	OutputAIRAC(&buf, c)
+	expectedAIRACOutput := "--- AIRACs: ---\n2207:\nTest 1\nTest 2\n2206:\nTest 3\nTest 4\nTest 5\n"
+	assert.Equal(t, expectedAIRACOutput, buf.String())
+}
+
+func TestOutputOther(t *testing.T) {
+	c := Changelog{
+		Other: []string{"Enhancement - Deleted Luton", "Bug - Removed all Gatwick (EGKK) SIDs"},
+	}
+	buf := bytes.Buffer{}
+	OutputOther(&buf, c)
+	expectedOtherOutput := "--- Other: ---\nEnhancement - Deleted Luton\nBug - Removed all Gatwick (EGKK) SIDs\n"
+	assert.Equal(t, expectedOtherOutput, buf.String())
+}
+
+func TestOutputContribs(t *testing.T) {
+	c := Changelog{
+		Contributors: []string{"John Doe", "Tim", "Sam Smith"},
+	}
+	buf := bytes.Buffer{}
+	OutputContribs(&buf, c)
+	expectedContribOutput := "--- Contributors: ---\nJohn Doe\nTim\nSam Smith\n"
+	assert.Equal(t, expectedContribOutput, buf.String())
+}
+
+func TestOutput(t *testing.T) {
+	c := Changelog{
+		Contributors: []string{"John Doe", "Tim", "Sam Smith"},
+		Other:        []string{"Enhancement - Deleted Luton", "Bug - Removed all Gatwick (EGKK) SIDs"},
+		AIRACs:       []int{2207, 2206},
+		AIRACMap: map[string][]string{
+			"2207": {"Test 1", "Test 2"},
+			"2206": {"Test 3", "Test 4", "Test 5"},
+		},
+	}
+	buf := bytes.Buffer{}
+	Output(&buf, c)
+	expectedAIRACOutput := "--- AIRACs: ---\n2207:\nTest 1\nTest 2\n2206:\nTest 3\nTest 4\nTest 5\n"
+	expectedOtherOutput := "--- Other: ---\nEnhancement - Deleted Luton\nBug - Removed all Gatwick (EGKK) SIDs\n"
+	expectedContribOutput := "--- Contributors: ---\nJohn Doe\nTim\nSam Smith\n"
+	expectedOutput := expectedAIRACOutput + "\n" + expectedOtherOutput + "\n" + expectedContribOutput
+	assert.Equal(t, expectedOutput, buf.String())
 }
