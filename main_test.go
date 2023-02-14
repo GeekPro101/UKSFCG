@@ -26,12 +26,7 @@ func TestGet(t *testing.T) {
 }
 
 func TestGetWillFail(t *testing.T) {
-	defer func() {
-		if r := recover(); r == nil {
-			t.Errorf("The code did not panic")
-		}
-	}()
-	GetWebChangelog("")
+	assert.Panics(t, func() { GetWebChangelog("") })
 }
 
 func TestGetChanges(t *testing.T) {
