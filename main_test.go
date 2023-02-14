@@ -2,6 +2,9 @@ package main
 
 import (
 	"bytes"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,8 +14,29 @@ var (
 	testChangelog Changelog = Changelog{}
 )
 
+func TestGet(t *testing.T) {
+	intendedResponse := "# Changes from release 2022/06 to 2022/07\n2. Bug - Corrected Alderney (EGJA) runway coords - thanks to @sdkjsdklfj (John Doe)\n3. AIRAC (2207) - Updated Cranfield (EGTC) SMR - thanks to @sdfsdf (Doe John)\nfakeline"
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, intendedResponse)
+	}))
+
+	defer server.Close()
+	actualbytes := GetWebChangelog(server.URL)
+	assert.Equal(t, []byte(intendedResponse), actualbytes)
+}
+
+func TestGetWillFail(t *testing.T) {
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("The code did not panic")
+		}
+	}()
+	GetWebChangelog("")
+}
+
 func TestGetChanges(t *testing.T) {
-	fakefile := "# Changes from release 2022/06 to 2022/07\n2. Bug - Corrected Alderney (EGJA) runway coords - thanks to @sdkjsdklfj (John Doe)\n3. AIRAC (2207) - Updated Cranfield (EGTC) SMR - thanks to @sdfsdf (Doe John)\nfakeline"
+	fakefile := "# Changes from release 2022/06 to 2022/07\n2. Bug - Corrected Alderney (EGJA) runway coords - thanks to @sdkjsdklfj (John Doe)\n3. AIRAC (2207) - Updated Cranfield (EGTC) SMR - thanks to @sdfsdf (Doe John)\nfakeline\n" +
+		"# Changes from 2022/05 to 2022/06\n1. AIRAC (2202) - This shouldn't be included - thanks to @sdsdkjf (Tom)\n"
 	changes := GetChanges([]byte(fakefile))
 	intendedChanges := []string{
 		"Bug - Corrected Alderney (EGJA) runway coords - thanks to @sdkjsdklfj (John Doe)",
