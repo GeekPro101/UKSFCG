@@ -10,10 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	testChangelog Changelog = Changelog{}
-)
-
 func TestGet(t *testing.T) {
 	intendedResponse := "# Changes from release 2022/06 to 2022/07\n2. Bug - Corrected Alderney (EGJA) runway coords - thanks to @sdkjsdklfj (John Doe)\n3. AIRAC (2207) - Updated Cranfield (EGTC) SMR - thanks to @sdfsdf (Doe John)\nfakeline"
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -41,6 +37,7 @@ func TestGetChanges(t *testing.T) {
 }
 
 func TestChangesSorter(t *testing.T) {
+	testChangelog := Changelog{}
 	changes := []string{
 		"Bug - Corrected Alderney (EGJA) runway coords - thanks to @sdkjsdklfj (John Doe)",
 		"AIRAC (2207) - Updated Cranfield (EGTC) SMR - thanks to @sdfsdf (Doe John)",
@@ -64,6 +61,7 @@ func TestChangesSorter(t *testing.T) {
 }
 
 func TestAiracMapGen(t *testing.T) {
+	testChangelog := Changelog{}
 	airacChanges := []string{
 		"AIRAC (2207) - Updated Cranfield (EGTC) SMR",
 		"AIRAC (2206) - Updated Inverness (EGPE) RWYs 05/23 and 11/29 coords - this was very silly",
@@ -83,6 +81,7 @@ func TestAiracMapGen(t *testing.T) {
 }
 
 func TestContribGen(t *testing.T) {
+	testChangelog := Changelog{}
 	changes := []string{
 		"Bug - Corrected Alderney (EGJA) runway coords - thanks to @sdkjsdklfj (John Doe)",
 		"AIRAC (2207) - Updated Cranfield (EGTC) SMR - thanks to @sdfsdf (Doe John)",
