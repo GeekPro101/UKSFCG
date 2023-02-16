@@ -68,16 +68,21 @@ func main() {
 			log.Panicln("Unable to read from " + opts.InputFile)
 		}
 	}
-	changelog := Changelog{}
-	changelog.Changes = GetChanges(filebytes)
-	changelog.AIRACList, changelog.Other = changelog.ChangesSorter()
-	changelog.AIRACMap, changelog.AIRACs = changelog.AIRACMapGen()
-	changelog.Contributors = changelog.ContribGen()
+	changelog := GenerateChangelog(filebytes)
 	file := CreateFile(opts.OutputFile)
 	Output(file, changelog)
 	fmt.Println("Output to: " + opts.OutputFile)
 	timeElapsed := time.Since(start)
 	fmt.Println("Time taken:", timeElapsed)
+}
+
+func GenerateChangelog(filebytes []byte) Changelog {
+	changelog := Changelog{}
+	changelog.Changes = GetChanges(filebytes)
+	changelog.AIRACList, changelog.Other = changelog.ChangesSorter()
+	changelog.AIRACMap, changelog.AIRACs = changelog.AIRACMapGen()
+	changelog.Contributors = changelog.ContribGen()
+	return changelog
 }
 
 func GetWebChangelog(urls string) []byte {
