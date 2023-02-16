@@ -25,6 +25,22 @@ func TestGetWillFail(t *testing.T) {
 	assert.Panics(t, func() { GetWebChangelog("") })
 }
 
+func TestGenerateChangelog(t *testing.T) {
+	file := "# Changes from release 2022/06 to 2022/07\n2. Bug - Corrected Alderney (EGJA) runway coords - thanks to @sdkjsdklfj (John Doe)\n3. AIRAC (2207) - Updated Cranfield (EGTC) SMR - thanks to @sdfsdf (Doe John)\nfakeline"
+	actualChangelog := GenerateChangelog([]byte(file))
+	intendedChangelog := Changelog{
+		Changes:   []string{"Bug - Corrected Alderney (EGJA) runway coords - thanks to @sdkjsdklfj (John Doe)", "AIRAC (2207) - Updated Cranfield (EGTC) SMR - thanks to @sdfsdf (Doe John)"},
+		AIRACList: []string{"AIRAC (2207) - Updated Cranfield (EGTC) SMR"},
+		AIRACMap: map[string][]string{
+			"2207": {"Updated Cranfield (EGTC) SMR"},
+		},
+		AIRACs:       []int{2207},
+		Contributors: []string{"John Doe", "Doe John"},
+		Other:        []string{"Bug - Corrected Alderney (EGJA) runway coords"},
+	}
+	assert.Equal(t, intendedChangelog, actualChangelog)
+}
+
 func TestGetChanges(t *testing.T) {
 	fakefile := "# Changes from release 2022/06 to 2022/07\n2. Bug - Corrected Alderney (EGJA) runway coords - thanks to @sdkjsdklfj (John Doe)\n3. AIRAC (2207) - Updated Cranfield (EGTC) SMR - thanks to @sdfsdf (Doe John)\nfakeline\n" +
 		"# Changes from 2022/05 to 2022/06\n1. AIRAC (2202) - This shouldn't be included - thanks to @sdsdkjf (Tom)\n"
