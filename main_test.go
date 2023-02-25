@@ -27,7 +27,7 @@ func TestGetWillFail(t *testing.T) {
 
 func TestGenerateChangelog(t *testing.T) {
 	file := "# Changes from release 2022/06 to 2022/07\n2. Bug - Corrected Alderney (EGJA) runway coords - thanks to @sdkjsdklfj (John Doe)\n3. AIRAC (2207) - Updated Cranfield (EGTC) SMR - thanks to @sdfsdf (Doe John)\nfakeline"
-	actualChangelog := GenerateChangelog([]byte(file))
+	actualChangelog, _ := GenerateChangelog([]byte(file))
 	intendedChangelog := Changelog{
 		Changes:   []string{"Bug - Corrected Alderney (EGJA) runway coords - thanks to @sdkjsdklfj (John Doe)", "AIRAC (2207) - Updated Cranfield (EGTC) SMR - thanks to @sdfsdf (Doe John)"},
 		AIRACList: []string{"AIRAC (2207) - Updated Cranfield (EGTC) SMR"},
@@ -86,7 +86,7 @@ func TestAiracMapGen(t *testing.T) {
 	testChangelog = Changelog{
 		AIRACList: airacChanges,
 	}
-	airacMap, airacs := testChangelog.AIRACMapGen()
+	airacMap, airacs, _ := testChangelog.AIRACMapGen()
 	intendedAiracMap := map[string][]string{
 		"2206": {"Updated Inverness (EGPE) RWYs 05/23 and 11/29 coords - this was very silly"},
 		"2207": {"Updated Cranfield (EGTC) SMR"},
