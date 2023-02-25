@@ -43,11 +43,7 @@ type Changelog struct {
 
 func main() {
 	start := time.Now()
-	defer func() {
-		if r := recover(); r != nil {
-			os.Exit(1)
-		}
-	}()
+	log.SetFlags(0)
 	_, err := flags.Parse(&opts)
 	if err != nil {
 		if strings.Contains(err.Error(), "help") {
