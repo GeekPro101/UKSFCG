@@ -49,7 +49,7 @@ func main() {
 		if strings.Contains(err.Error(), "help") {
 			os.Exit(0)
 		}
-		log.Panicln("Error while parsing args")
+		log.Fatalln("Error while parsing args")
 	}
 	var filebytes []byte
 	if opts.Url != "" {
@@ -64,7 +64,10 @@ func main() {
 			log.Panicln("Unable to read from " + opts.InputFile)
 		}
 	}
-	changelog := GenerateChangelog(filebytes)
+	changelog, err := GenerateChangelog(filebytes)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	file := CreateFile(opts.OutputFile)
 	Output(file, changelog)
 	fmt.Println("Output to: " + opts.OutputFile)
@@ -72,13 +75,17 @@ func main() {
 	fmt.Println("Time taken:", timeElapsed)
 }
 
-func GenerateChangelog(filebytes []byte) Changelog {
+func GenerateChangelog(filebytes []byte) (Changelog, error) {
 	changelog := Changelog{}
+	var err error
 	changelog.Changes = GetChanges(filebytes)
 	changelog.AIRACList, changelog.Other = changelog.ChangesSorter()
-	changelog.AIRACMap, changelog.AIRACs = changelog.AIRACMapGen()
+	changelog.AIRACMap, changelog.AIRACs, err = changelog.AIRACMapGen()
+	if err != nil {
+		return Changelog{}, err
+	}
 	changelog.Contributors = changelog.ContribGen()
-	return changelog
+	return changelog, nil
 }
 
 func GetWebChangelog(urls string) []byte {
@@ -137,7 +144,7 @@ func (changelog *Changelog) ChangesSorter() ([]string, []string) {
 	return airacList, otherList
 }
 
-func (changelog *Changelog) AIRACMapGen() (map[string][]string, []int) {
+func (changelog *Changelog) AIRACMapGen() (map[string][]string, []int, error) {
 	airacmap := map[string][]string{}
 	airacNumReComp := regexp.MustCompile(airacNumRe)
 	airacMessageReComp := regexp.MustCompile(airacMessageRe)
@@ -156,13 +163,12 @@ func (changelog *Changelog) AIRACMapGen() (map[string][]string, []int) {
 	for d := range airacmap {
 		d, err := strconv.Atoi(d) // converts to int as that makes the sorting easier
 		if err != nil {
-			log.Panicln("Unable to convert AIRAC string to int")
-			return nil, nil
+			return nil, nil, err
 		}
 		keylist = append(keylist, d)
 	}
 	sort.Sort(sort.Reverse(sort.IntSlice(keylist))) // reverses the sort order so that it goes newest airac first
-	return airacmap, keylist
+	return airacmap, keylist, nil
 }
 
 func (changelog *Changelog) ContribGen() []string {
