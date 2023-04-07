@@ -69,6 +69,7 @@ func main() {
 		log.Fatalln(err)
 	}
 	file := CreateFile(opts.OutputFile)
+	defer file.Close()
 	Output(file, changelog)
 	fmt.Println("Output to: " + opts.OutputFile)
 	timeElapsed := time.Since(start)
