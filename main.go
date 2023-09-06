@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -235,7 +236,23 @@ func OutputAIRAC(f io.Writer, c Changelog) {
 
 func OutputOther(f io.Writer, c Changelog) {
 	f.Write([]byte("--- Other: ---" + "\n"))
+	procchangereg := regexp.MustCompile(`^Procedure\sChange\s`)
+	procchangelist := []string{}
+	otherlist := []string{}
+	totlist := []string{}
 	for value := range c.OtherMap {
+		if procchangereg.MatchString(value) {
+			procchangelist = append(procchangelist, value)
+		} else {
+			otherlist = append(otherlist, value)
+		}
+	}
+	slices.Sort(procchangelist)
+	slices.Reverse(procchangelist)
+	totlist = append(totlist, procchangelist...)
+	slices.Sort(otherlist)
+	totlist = append(totlist, otherlist...)
+	for ind, value := range totlist {
 		f.Write([]byte(value + ":\n"))
 		for _, msg := range c.OtherMap[value] {
 			str := fmt.Sprintf("%s\n", msg)
