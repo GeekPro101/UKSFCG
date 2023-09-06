@@ -38,6 +38,7 @@ type Changelog struct {
 	AIRACMap     map[string][]string
 	AIRACs       []int
 	Other        []string
+	OtherMap     map[string][]string
 	Contributors []string
 }
 
@@ -85,6 +86,7 @@ func GenerateChangelog(filebytes []byte) (Changelog, error) {
 	if err != nil {
 		return Changelog{}, err
 	}
+	changelog.OtherMap = changelog.OtherMapGen()
 	changelog.Contributors = changelog.ContribGen()
 	return changelog, nil
 }
@@ -145,6 +147,26 @@ func (changelog *Changelog) ChangesSorter() ([]string, []string) {
 	return airacList, otherList
 }
 
+func (changelog *Changelog) OtherMapGen() map[string][]string {
+	otherreg := regexp.MustCompile(`^([^-\n]+)`)
+	retmap := map[string][]string{}
+	for _, change := range changelog.Other {
+		changetype := otherreg.FindString(change)
+		changeloc := otherreg.FindStringIndex(change)
+		changetext := string(change[changeloc[1]+2:])
+		changetypetrim := strings.TrimSpace(changetype)
+		var changes []string
+		if retmap[changetypetrim] == nil {
+			changes = []string{}
+		} else {
+			changes = retmap[changetypetrim]
+		}
+		changes = append(changes, changetext)
+		retmap[changetypetrim] = changes
+	}
+	return retmap
+}
+
 func (changelog *Changelog) AIRACMapGen() (map[string][]string, []int, error) {
 	airacmap := map[string][]string{}
 	airacNumReComp := regexp.MustCompile(airacNumRe)
@@ -203,15 +225,19 @@ func OutputAIRAC(f io.Writer, c Changelog) {
 		value := c.AIRACMap[fmt.Sprint(key)]
 		f.Write([]byte(fmt.Sprint(key) + ":\n"))
 		for _, y := range value {
-			f.Write([]byte(y + "\n"))
+			f.Write([]byte("- "+ y + "\n"))
 		}
 	}
 }
 
 func OutputOther(f io.Writer, c Changelog) {
 	f.Write([]byte("--- Other: ---" + "\n"))
-	for _, value := range c.Other {
-		f.Write([]byte(value + "\n"))
+	for value := range c.OtherMap {
+		f.Write([]byte(value + ":\n"))
+		for _, msg := range c.OtherMap[value] {
+			str := fmt.Sprintf("- %s\n", msg)
+			f.Write([]byte(str))
+		}
 	}
 }
 
