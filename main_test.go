@@ -36,6 +36,7 @@ func TestGenerateChangelog(t *testing.T) {
 		},
 		AIRACs:       []int{2207},
 		Contributors: []string{"John Doe", "Doe John"},
+		OtherMap:     map[string][]string{"Bug": {"Corrected Alderney (EGJA) runway coords"}},
 		Other:        []string{"Bug - Corrected Alderney (EGJA) runway coords"},
 	}
 	assert.Equal(t, intendedChangelog, actualChangelog)
@@ -126,17 +127,17 @@ func TestAIRACOutput(t *testing.T) {
 	}
 	buf := bytes.Buffer{}
 	OutputAIRAC(&buf, c)
-	expectedAIRACOutput := "--- AIRACs: ---\n2207:\nTest 1\nTest 2\n2206:\nTest 3\nTest 4\nTest 5\n"
+	expectedAIRACOutput := "--- AIRACs: ---\n2207:\nTest 1\nTest 2\n\n2206:\nTest 3\nTest 4\nTest 5\n"
 	assert.Equal(t, expectedAIRACOutput, buf.String())
 }
 
 func TestOutputOther(t *testing.T) {
 	c := Changelog{
-		Other: []string{"Enhancement - Deleted Luton", "Bug - Removed all Gatwick (EGKK) SIDs"},
+		OtherMap: map[string][]string{"Enhancement": {"Deleted Luton"}, "Bug": {"Removed all Gatwick (EGKK) SIDs"}},
 	}
 	buf := bytes.Buffer{}
 	OutputOther(&buf, c)
-	expectedOtherOutput := "--- Other: ---\nEnhancement - Deleted Luton\nBug - Removed all Gatwick (EGKK) SIDs\n"
+	expectedOtherOutput := "--- Other: ---\nBug:\nRemoved all Gatwick (EGKK) SIDs\n\nEnhancement:\nDeleted Luton\n"
 	assert.Equal(t, expectedOtherOutput, buf.String())
 }
 
@@ -154,6 +155,7 @@ func TestOutput(t *testing.T) {
 	c := Changelog{
 		Contributors: []string{"John Doe", "Tim", "Sam Smith"},
 		Other:        []string{"Enhancement - Deleted Luton", "Bug - Removed all Gatwick (EGKK) SIDs"},
+		OtherMap:     map[string][]string{"Enhancement": {"Deleted Luton"}, "Bug": {"Removed all Gatwick (EGKK) SIDs"}},
 		AIRACs:       []int{2207, 2206},
 		AIRACMap: map[string][]string{
 			"2207": {"Test 1", "Test 2"},
@@ -162,8 +164,8 @@ func TestOutput(t *testing.T) {
 	}
 	buf := bytes.Buffer{}
 	Output(&buf, c)
-	expectedAIRACOutput := "--- AIRACs: ---\n2207:\nTest 1\nTest 2\n2206:\nTest 3\nTest 4\nTest 5\n"
-	expectedOtherOutput := "--- Other: ---\nEnhancement - Deleted Luton\nBug - Removed all Gatwick (EGKK) SIDs\n"
+	expectedAIRACOutput := "--- AIRACs: ---\n2207:\nTest 1\nTest 2\n\n2206:\nTest 3\nTest 4\nTest 5\n"
+	expectedOtherOutput := "--- Other: ---\nBug:\nRemoved all Gatwick (EGKK) SIDs\n\nEnhancement:\nDeleted Luton\n"
 	expectedContribOutput := "--- Contributors: ---\nJohn Doe\nTim\nSam Smith\n"
 	expectedOutput := expectedAIRACOutput + "\n" + expectedOtherOutput + "\n" + expectedContribOutput
 	assert.Equal(t, expectedOutput, buf.String())
