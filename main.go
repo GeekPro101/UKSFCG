@@ -221,11 +221,14 @@ func CreateFile(outputFile string) *os.File {
 
 func OutputAIRAC(f io.Writer, c Changelog) {
 	f.Write([]byte("--- AIRACs: ---" + "\n"))
-	for _, key := range c.AIRACs {
+	for ind, key := range c.AIRACs {
 		value := c.AIRACMap[fmt.Sprint(key)]
 		f.Write([]byte(fmt.Sprint(key) + ":\n"))
 		for _, y := range value {
-			f.Write([]byte("- "+ y + "\n"))
+			f.Write([]byte(y + "\n"))
+		}
+		if ind+1 != len(c.AIRACs) {
+			f.Write([]byte("\n"))
 		}
 	}
 }
@@ -237,6 +240,9 @@ func OutputOther(f io.Writer, c Changelog) {
 		for _, msg := range c.OtherMap[value] {
 			str := fmt.Sprintf("- %s\n", msg)
 			f.Write([]byte(str))
+		}
+		if ind+1 != len(totlist) {
+			f.Write([]byte("\n"))
 		}
 	}
 }
