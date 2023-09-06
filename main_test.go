@@ -13,7 +13,7 @@ import (
 func TestGet(t *testing.T) {
 	intendedResponse := "# Changes from release 2022/06 to 2022/07\n2. Bug - Corrected Alderney (EGJA) runway coords - thanks to @sdkjsdklfj (John Doe)\n3. AIRAC (2207) - Updated Cranfield (EGTC) SMR - thanks to @sdfsdf (Doe John)\nfakeline"
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, intendedResponse)
+		fmt.Fprint(w, intendedResponse)
 	}))
 
 	defer server.Close()
