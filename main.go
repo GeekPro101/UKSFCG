@@ -238,7 +238,7 @@ func OutputOther(f io.Writer, c Changelog) {
 	for value := range c.OtherMap {
 		f.Write([]byte(value + ":\n"))
 		for _, msg := range c.OtherMap[value] {
-			str := fmt.Sprintf("- %s\n", msg)
+			str := fmt.Sprintf("%s\n", msg)
 			f.Write([]byte(str))
 		}
 		if ind+1 != len(totlist) {
