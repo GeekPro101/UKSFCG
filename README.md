@@ -51,10 +51,12 @@ Larry Benwater
 
 ## Usage
 There are two ways to use this program:
+
 - Locally - copy and paste the desired changelog list from [https://raw.githubusercontent.com/VATSIM-UK/UK-Sector-File/main/.github/CHANGELOG.md](https://raw.githubusercontent.com/VATSIM-UK/UK-Sector-File/main/.github/CHANGELOG.md) into a `changelog.md` file locally, and just run with `./UKSFCG`
 - Online - run the program using `./UKSFCG --url`, which will read from the default URL specified below
 
 Flags:
+
 - `--in` - sets the input file, optional, default `changelog.md`
 - `--out` - sets the output file, optional, default `output.txt`
 - `--url` - sets the url, optional, if `--url` is present but empty then it defaults to `https://raw.githubusercontent.com/VATSIM-UK/UK-Sector-File/main/.github/CHANGELOG.md` 
@@ -62,4 +64,5 @@ Flags:
 The `--url` flag takes precedence over `--in`, so if both are specified, then it will read from online.
 
 ## Limitations
+
 - If a contributor has been added in the format `- thanks to @John (John Smith) and Smith John`, Smith John would not be on the contributors list
