@@ -2,28 +2,46 @@
 UK Sector File Changelog Generator is a small CLI tool designed to make releasing the UK Sector File easier by separating the kinds of changes and contributors, to be easily copied and pasted.
 
 The output is in this format:
+
 ```txt
 --- AIRACs: ---
-2207:
-Updated Dundee (EGPN) hold D on SMR
-Updated Cranfield (EGTC) SMR
-Updated Inverness (EGPE) RWYs 05/23 and 11/29 coords
-Removed Belfast Aldergrove (OY) NDB
+2309:
+Updated Kirknewton (EGKT) Runway Coordinate
+Updated Dover (DVR) VOR/DME coordinates
+Added EG D713 (Fast Jet Area South) & EG D901 (Fast Jet Area North)
+Added Portland Heliport (EGDP) A/G Position and Updated Basic Data
+Updated ADN, IOM, LND and TNT VOR Coordinates
+Removed Bristol (EGGD) stands 31R & 33L
+Added Waddignton (EGXW) RNP approach fixes
+Updated Wattisham (EGUW) Tower frequency
+Added Biggin Hill (EGKR) new taxiway
+Added Fairoaks (EGTF) disused taxiway
+
+2308:
+Updated Belfast Aldergrove (EGAA) SMR
 
 --- Other: ---
-Bug - Fixed D087E Position
-Enhancement - Updated Belfast Aldergrove (EGAA) SMR to better differentiate Tug and Hold Points
-Bug - Corrected Alderney (EGJA) runway coords
-Enhancement - Added missing heli points and holds to Gloucestershire (EGBJ) SMR
-Enhancement - Refined Fairford (EGVA) SMR
-Enhancement - Added Luton (EGGW) Tug Release Points
-Enhancement - Added Stansted (EGSS) Ground Network
-Bug - Corrected Guernsey (EGJB) runway threshold coords
-Enhancement - Added Gatwick (EGKK) Ground Network
-Bug - Corrected Prestwick (EGPK) RWY 30 threshold coords
-Enhancement - Added Luton (EGGW) Ground Network
-Enhancement - Added Glasgow (EGPF) Ground Network
-Enhancement - Added Liverpool (EGGP) Ground Network
+Procedure Change (2309):
+Amended EuroCenter vACC EURM-W and EURW-N callsigns to EUC-MW and EUC-WN, respectively
+8.33KHz Trial - Changed non-UK frequencies
+8.33KHz Trial (ENR Phase 1) - Transitioned LAC West & Clacton frequencies
+8.33 Trial (AD Phase 1) - Transition EGLL/PH/SS/GP Frequencies
+
+Bug:
+Removed Gatwick (EGKK) stand 145 L/R labels
+Renamed Waddington (EGXW) holding points
+Fixed Farnborough (EGLF) Inbound Agreements from the north via CPT.
+
+Enhancement:
+Updated Birmingham (EGBB) SMR style
+Added Derby (EGBD) SMR
+Removed Manchester (EGCC) disused stands
+Improved East Midlands (EGNX) VFR Lane and SID Line Colours
+Added Jersey Control radar regions & colours
+Added Yeovilton (EGDY) stand numbers
+Added Leeds East (EGCM) SMR
+Updated Barton (EGCB) SMR
+Added Haverfordwest (EGFE) SMR
 
 --- Contributors: ---
 John Doe
