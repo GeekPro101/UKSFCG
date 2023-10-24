@@ -65,4 +65,4 @@ The `--url` flag takes precedence over `--in`, so if both are specified, then it
 
 ## Limitations
 
-- If a contributor has been added in the format `- thanks to @John (John Smith) and Smith John`, Smith John would not be on the contributors list
+- If a contributor has been added in the format `- thanks to @John (John Smith) and Smith John`, then Smith John would not be on the contributors list.
